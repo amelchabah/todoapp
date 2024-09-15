@@ -53,8 +53,8 @@ export default function Signup() {
                     />
                     <button type="submit">Create your account</button>
                 </form>
-                {error && <p className='form_error' style={{ color: 'red' }}>{error}</p>}
-                {success && <p className='form_error' style={{ color: 'green' }}>Success, check your inbox to continue!</p>}
+                {error && <p className='form_message' style={{ color: 'red' }}>{error}</p>}
+                {success && <p className='form_message' style={{ color: 'green' }}>Success, check your inbox to continue!</p>}
 
                 <br />
                 <Link
