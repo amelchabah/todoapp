@@ -1,5 +1,6 @@
-import Head from 'next/head'
-import Link from 'next/link'
+import Head from 'next/head';
+import Link from 'next/link';
+import styles from '@/styles/index.module.scss';
 
 export default function Home() {
   return (
@@ -7,16 +8,21 @@ export default function Home() {
       <Head>
         <title>home</title>
       </Head>
-      <main>
-        <h1>home</h1>
-        <Link href='/login'>
+      <nav className={styles.homepage_navbar}>
+        <Link href='/login' title='Log in' className='button secondary'>
           Log in
         </Link>
-        <br />
-        <Link href='/signin'>
+        <Link href='/signup' title='Sign up' className='button primary'>
           Sign up
         </Link>
-      </main>
+      </nav>
+      <header className={styles.homepage_header}>
+        <h1>todo app 🥠</h1>
+        <h2>your local task manager :)</h2>
+      </header>
+      <div className={styles.homepage_content}>
+
+      </div>
     </>
 
   );

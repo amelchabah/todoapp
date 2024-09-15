@@ -3,6 +3,10 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../lib/supabaseClient';
+import styles from '@/styles/login.module.scss';
+import Head from 'next/head';
+import Link from 'next/link';
+
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -28,31 +32,42 @@ const Login = () => {
     };
 
     return (
-        <div>
-            <h1>Login</h1>
-            <form onSubmit={handleLogin}>
-                <label>
-                    Email:
+        <>
+            <Head>
+                <title>Login</title>
+            </Head>
+            <div className={styles.loginpage_header}>
+                <h1>Log in 🥟</h1>
+                <br />
+
+                <form onSubmit={handleLogin}>
                     <input
                         type="email"
+                        placeholder="Email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
-                </label>
-                <br />
-                <label>
-                    Password:
                     <input
                         type="password"
+                        placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                </label>
+                    <button type="submit">Log in</button>
+                </form>
+                {error && <p className='form_error'>{error}</p>}
+
                 <br />
-                <button type="submit">Login</button>
-            </form>
-            {error && <p>{error}</p>}
-        </div>
+                <Link
+                    href='/signup'
+                    title="Sign up"
+                    className='button tertiary'
+                >
+                    New here ? Create your account →
+                </Link>
+            </div>
+        </>
+
     );
 };
 
