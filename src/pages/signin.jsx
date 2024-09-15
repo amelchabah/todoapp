@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
+/* eslint-disable react/no-unescaped-entities */
 
 export default function Signup() {
     const [email, setEmail] = useState('');
