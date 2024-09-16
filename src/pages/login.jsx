@@ -53,7 +53,7 @@ const Login = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    <button type="submit">Log in</button>
+                    <button type="submit" className='primary'>Log in</button>
                 </form>
                 {error && <p className='form_message'>{error}</p>}
 
@@ -61,7 +61,7 @@ const Login = () => {
                 <Link
                     href='/signup'
                     title="Sign up"
-                    className='button tertiary'
+                    className='button link'
                 >
                     New here ? Create your account →
                 </Link>

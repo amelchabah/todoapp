@@ -7,7 +7,11 @@ import styles from '@/styles/dashboard.module.scss';
 import Sidebar from '@/components/Sidebar/Sidebar';
 import Navbar from '@/components/Navbar/Navbar';
 import NewTaskModal from '@/components/NewTaskModal/NewTaskModal';
-import { formatDate } from '../utils/dateUtils'; // Importez la fonction utilitaire
+import DataTable from '@/components/DataTable/DataTable';
+import Kanban from '@/components/Kanban/Kanban';
+import { formatDate } from '../utils/dateUtils';
+import { TableIcon, KanbanIcon } from '@/assets/icons';  // Importer les icônes
+
 
 const Dashboard = () => {
     const [tasks, setTasks] = useState([]);
@@ -16,10 +20,15 @@ const Dashboard = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [taskToEdit, setTaskToEdit] = useState(null);  // Gérer la tâche à éditer
     const router = useRouter();
-    const [viewMode, setViewMode] = useState('list'); // 'list' ou 'gallery'
-
+    const [viewMode, setViewMode] = useState('list'); // 'list' ou 'kanban'
+    const [activeDropdown, setActiveDropdown] = useState(null); // Pour gérer un seul dropdown à la fois
 
     useEffect(() => {
+        const storedViewMode = localStorage.getItem('viewMode');
+        if (storedViewMode) {
+            setViewMode(storedViewMode);
+        }
+
         const fetchUser = async () => {
             const { data: { user } } = await supabase.auth.getUser();
             if (user) {
@@ -81,13 +90,21 @@ const Dashboard = () => {
         }
     };
 
+    const handleViewModeChange = (mode) => {
+        setViewMode(mode);
+        localStorage.setItem('viewMode', mode);  // Sauvegarde du mode de vue dans localStorage
+    };
+
+    const handleDropdownToggle = (dropdownId) => {
+        setActiveDropdown((prev) => (prev === dropdownId ? null : dropdownId));
+    };
+
     return (
         <>
             <Sidebar fetchTasks={fetchTasks} userId={user?.id} />
             <div className={styles.dashboardpage}>
                 <Navbar />
                 <div className={styles.dashboardpage_content}>
-
                     {
                         tasks && tasks.length > 0 ? <>
                             <h1>
@@ -97,90 +114,51 @@ const Dashboard = () => {
                         </>
                     }
 
-
                     {error && <p>{error}</p>}
-
-
-
+                    <br />
 
                     {tasks && tasks.length > 0 ?
-
                         <>
-                            <div className={styles.viewSwitcher}>
-                                <button
-                                    className={viewMode === 'list' ? styles.active : ''}
-                                    onClick={() => setViewMode('list')}
-                                >
-                                    List View
-                                </button>
-                                <button
-                                    className={viewMode === 'gallery' ? styles.active : ''}
-                                    onClick={() => setViewMode('gallery')}
-                                >
-                                    Gallery View
-                                </button>
+                            <div className={styles.databaseHeader}>
+
+                                <div className={styles.viewSwitcher}>
+                                    <button
+                                        className={viewMode === 'list' ? 'tertiary active' : 'tertiary'}
+                                        onClick={() => handleViewModeChange('list')}  // Changement de mode avec sauvegarde
+                                    >
+                                        <TableIcon /> Table
+                                    </button>
+                                    <button
+                                        className={viewMode === 'kanban' ? 'tertiary active' : 'tertiary'}
+                                        onClick={() => handleViewModeChange('kanban')}  // Changement de mode avec sauvegarde
+                                    >
+                                       <KanbanIcon /> Kanban
+                                    </button>
+                                </div>
+
+                                <div className={styles.options}>
+                                 
+                                </div>
                             </div>
 
                             {viewMode === 'list' ? (
-                                <table className={styles.taskTable}>
-                                    <thead>
-                                        <tr>
-                                            <th>Task</th>
-                                            <th>Status</th>
-                                            <th>Deadline</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {tasks.map((task) => (
-                                            <tr key={task.id} onClick={() => handleTaskClick(task)}>
-                                                <td>{task.title}</td>
-                                                <td>
-                                                    <span className={getStatusBadgeClass(task.status)}>
-                                                        {task.status === 'To start' ? '📅  to start' :
-                                                            task.status === 'In progress' ? '🔄  in progress' :
-                                                                task.status === 'Done' ? '✅  done' : task.status.toLowerCase()}
-                                                    </span>
-                                                </td>
-                                                <td>{formatDate(task.deadline)}</td>
-                                                <td>
-                                                    <button onClick={(e) => { e.stopPropagation(); handleDeleteTask(task.id); }}>
-                                                        🗑️
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-
-
-                                </table>
+                                <DataTable
+                                    tasks={tasks}
+                                    onTaskClick={handleTaskClick}
+                                    onDeleteTask={handleDeleteTask}
+                                    getStatusBadgeClass={getStatusBadgeClass}
+                                />
                             ) : (
-                                <div className={styles.gallery}>
-                                    {tasks.map((task) => (
-                                        <div
-                                            key={task.id}
-                                            className={styles.galleryItem}
-                                            onClick={() => handleTaskClick(task)}
-                                        >
-                                            <h3>{task.title}</h3>
-                                            <span className={getStatusBadgeClass(task.status)}>
-                                                {task.status === 'To start' ? '📅  to start' :
-                                                    task.status === 'In progress' ? '🔄  in progress' :
-                                                        task.status === 'Done' ? '✅  done' : task.status.toLowerCase()}
-                                            </span>
-                                            <p>{formatDate(task.deadline)}</p>
-                                            <button onClick={(e) => { e.stopPropagation(); handleDeleteTask(task.id); }}>
-                                                🗑️
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
+                                <Kanban
+                                    tasks={tasks}
+                                    onTaskClick={handleTaskClick}
+                                    onDeleteTask={handleDeleteTask}
+                                    getStatusBadgeClass={getStatusBadgeClass}
+                                />
                             )}
-
                         </>
                         :
                         null
-
                     }
 
                 </div>

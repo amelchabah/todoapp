@@ -1,0 +1,74 @@
+.dataTable {
+    width: 100%;
+    min-width: 300px;
+    max-width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    text-align: left;
+    overflow-x: auto;
+    white-space: nowrap;
+    display: block;
+    overflow: visible;
+
+    th {
+        font-weight: 600;
+        opacity: 0.6;
+        padding: 0.5rem !important;
+
+        div {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 10px;
+            &.mini {
+                justify-content: center;
+            }
+        }
+
+        
+    }
+
+    th,
+    td {
+        padding: 0.25rem;
+        border-bottom: 1px solid var(--background-opacity);
+
+        svg {
+            height: 0.9rem;
+            width: auto;
+            fill: var(--foreground);
+            stroke: var(--foreground);
+        }
+    }
+
+    tbody tr {
+        button.open {
+            visibility: hidden;
+            margin-right: 10px;
+        }
+
+        &:hover {
+            button.open {
+                visibility: visible;
+
+            }
+        }
+    }
+
+    td {
+        color: var(--foreground);
+    }
+
+    td:first-child {
+        font-weight: bold;
+        position: relative;
+    }
+
+    .titleContainer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+    }
+
+}

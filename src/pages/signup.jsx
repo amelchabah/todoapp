@@ -51,7 +51,7 @@ export default function Signup() {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
-                    <button type="submit">Create your account</button>
+                    <button type="submit" className='primary'>Create your account</button>
                 </form>
                 {error && <p className='form_message' style={{ color: 'red' }}>{error}</p>}
                 {success && <p className='form_message' style={{ color: 'green' }}>Success, check your inbox to continue!</p>}
@@ -60,7 +60,7 @@ export default function Signup() {
                 <Link
                     href='/login'
                     title="Log in"
-                    className='button tertiary'
+                    className='button link'
                 >
                     Already have an account ? Sign in →
                 </Link>

@@ -26,39 +26,6 @@
     }
 }
 
-.taskTable {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    font-size: 0.9rem;
-    text-align: left;
-
-    th {
-        font-size: 0.8rem;
-        opacity: 0.6;
-    }
-
-    th, td {
-        padding: 0.5rem;
-        border-bottom: 1px solid var(--background-opacity);
-    }
-
-    tbody tr {
-        cursor: pointer;
-        &:hover {
-            background-color: var(--background-opacity);
-        }
-    }
-    td {
-        color: var(--foreground);
-    }
-
-    td:first-child {
-        font-weight: bold;
-    }
-}
-
-
 
 .badge {
     display: inline-block;
@@ -71,48 +38,29 @@
 }
 
 .toStart {
-    background-color: var(--status-to-start);
+    background-color: var(--status-to-start-bg);
+    color: var(--status-to-start);
 }
 
 .inProgress {
-    background-color: var(--status-in-progress);
+    background-color: var(--status-in-progress-bg);
+    color: var(--status-in-progress);
 }
 
 .done {
-    background-color: var(--status-done);
+    background-color: var(--status-done-bg);
+    color: var(--status-done);
 }
 
-
+.databaseHeader {
+    display: flex;
+    border-bottom: 1px solid var(--background-opacity);
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 0;}
 
 .viewSwitcher {
-    margin-bottom: 20px;
-}
-
-.gallery {
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    gap: 5px;
 }
 
-.galleryItem {
-    border: 1px solid var(--background-opacity);
-    border-radius: 10px;
-    padding: 15px;
-    flex: 1 1 calc(33% - 20px);
-    cursor: pointer;
-    transition: background 0.3s;
-
-    &:hover {
-        background: var(--background-opacity);
-    }
-
-    h3 {
-        margin: 0 0 10px;
-        font-size: 1.2rem;
-    }
-
-    span {
-        display: block;
-        margin-bottom: 10px;
-    }
-}

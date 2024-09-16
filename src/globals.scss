@@ -1,33 +1,32 @@
 @import url('https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
+// light mode (default)
 :root {
-    --background-light: #ffffff;
-    --background-opacity-light: #f2f2f2;
-    --foreground-light: #171717;
-    --border-color-light: #cccccc;
+    --background: #ffffff;
+    --background-opacity: #f7f7f7;
+    --foreground: #171717;
+    --border-color: #e2e2e2;
 
-    --background-dark: #0a0a0a;
-    --background-opacity-dark: #111111;
-    --foreground-dark: #ededed;
-    --border-color-dark: #333333;
-
-    --background: var(--background-light);
-    --background-opacity: var(--background-opacity-light);
-    --foreground: var(--foreground-light);
-    --border-color: var(--border-color-light);
-
-    --status-to-start: #ff4d4d95;  // Rouge pour "to start"
-    --status-in-progress: #ffc342a5;  // Orange pour "in progress"
-    --status-done: #51af4ca7;  // Vert pour "done"
+    // status colors
+    --status-to-start-bg: #ff4d4d82;
+    --status-in-progress-bg: #ffc3427c;
+    --status-done-bg: #71db6c7c;
+    --status-to-start: #861010;
+    --status-in-progress: #825f14;
+    --status-done: #12650d;
 
 }
 
 [data-theme='dark'] {
-    --background-opacity: var(--background-opacity-dark);
-    --background: var(--background-dark);
-    --foreground: var(--foreground-dark);
-    --border-color: var(--border-color-dark);
+    --background: #0a0a0a;
+    --background-opacity: #171717;
+    --foreground: #ededed;
+    --border-color: #333333;
+
+    --status-to-start: #ffc4c4;
+    --status-in-progress: #ffeabd;
+    --status-done: #c1ffbe;
 }
 
 html {
@@ -80,7 +79,9 @@ form {
 button,
 .button,
 input[type="submit"] {
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    gap: 5px;
     border: 1px solid var(--foreground);
     color: var(--background);
     background-color: var(--foreground);
@@ -90,19 +91,26 @@ input[type="submit"] {
     font-weight: 600;
     font-family: 'Switzer', sans-serif;
     cursor: pointer;
-    transition: all 0.3s ease-in-out;
+    transition: background-color 0.3s ease-in-out;
     height: fit-content;
 
     svg {
         fill: var(--background);
+        stroke: var(--border-color);
+        height: 0.9rem;
+        width: auto;
     }
 
     &:hover {
         color: var(--border-color);
-
         svg {
             fill: var(--border-color);
+            stroke: var(--border-color);
         }
+    }
+
+    &.primary {
+        justify-content: center;
     }
 
 
@@ -110,9 +118,21 @@ input[type="submit"] {
         border: 1px solid var(--border-color);
         color: var(--foreground);
         background-color: var(--background);
+        padding: 5px 10px;
+
+        &_square {
+            padding: 7px 9px;
+        }
 
         svg {
             fill: var(--foreground);
+            stroke: var(--foreground);
+            height: 1rem;
+            width: auto;
+        }
+
+        &.active {
+            background-color: var(--background-opacity);
         }
 
         &:hover {
@@ -121,7 +141,37 @@ input[type="submit"] {
         }
     }
 
+    
+
     &.tertiary {
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        color: var(--foreground);
+        font-weight: 700;
+        background-color: transparent;
+        font-size: 0.9rem;
+        opacity: 0.6;
+     
+        &_square {
+            padding: 7px 9px;
+        }
+
+        svg {
+            fill: var(--foreground);
+            stroke: var(--foreground);
+        }
+
+        &:hover {
+            background-color: var(--border-color)
+        }
+
+        &.active {
+            opacity: 1;
+        }
+    }
+
+    &.link {
         border: none;
         padding: 0;
         color: var(--foreground);
@@ -132,6 +182,7 @@ input[type="submit"] {
 
         svg {
             fill: var(--foreground);
+            stroke: var(--foreground);
         }
 
         &:hover {
@@ -140,10 +191,10 @@ input[type="submit"] {
     }
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"],
-textarea {
+input,
+textarea,
+select,
+option {
     border: 1px solid var(--border-color);
     border-radius: 4px;
     padding: 10px;
@@ -181,4 +232,20 @@ textarea {
     width: 48px;
     justify-content: center;
     align-items: center;
+}
+
+span.small {
+    font-weight: 600;
+    font-size: 0.9rem;
+    opacity: 0.5;
+
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    svg {
+        height: 0.9rem;
+        width: auto;
+        fill: var(--foreground);
+    }
 }
