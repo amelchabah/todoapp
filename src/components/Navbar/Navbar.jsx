@@ -21,6 +21,7 @@ const Navbar = ({ onToggleFullWidth, isFullWidth }) => {
 
   return (
     <nav className={styles.navbar}>
+      <h4>{currentTime}</h4>
 
       <Dropdown
         items={[
@@ -28,7 +29,7 @@ const Navbar = ({ onToggleFullWidth, isFullWidth }) => {
             title: 'Full Width',
             label: (
               <>
-                <span>Full Width</span>
+                <span>Full width</span>
                 <Toggle
                   isChecked={isFullWidth}
                 />
@@ -39,8 +40,6 @@ const Navbar = ({ onToggleFullWidth, isFullWidth }) => {
         ]}
         onItemClick={(item) => onToggleFullWidth(!isFullWidth)}
       />
-
-      <h4>{currentTime}</h4>
     </nav>
   );
 };

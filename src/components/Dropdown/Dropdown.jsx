@@ -39,7 +39,7 @@ const Dropdown = ({ items, onItemClick }) => {
                     {items.map((item, index) => (
                         <button
                             key={index}
-                            className={`${styles.dropdownItem} ${item.className || ''} tertiary`}
+                            className={`${styles.dropdownItem} ${item.className || ''}`}
                             onClick={() => {
                                 if (item.onClick) {
                                     item.onClick();

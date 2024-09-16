@@ -4,7 +4,9 @@
 }
 
 .dropdownMenu {
-    display: block;
+    flex-direction: column;
+    display: flex;
+    gap: 2px;
     position: absolute;
     right: 0;
     top: 100%;
@@ -23,5 +25,14 @@
 
     button {
         width: 100%;
+        font-weight: 600;
+        padding: 6px 9px;
+        background-color: transparent;
+        border: none;
+        color: var(--foreground);
+
+        &:hover {
+            background-color: var(--background-opacity);
+        }
     }
 }
