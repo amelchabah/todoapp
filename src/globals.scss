@@ -16,6 +16,11 @@
     --background-opacity: var(--background-opacity-light);
     --foreground: var(--foreground-light);
     --border-color: var(--border-color-light);
+
+    --status-to-start: #ff4d4d95;  // Rouge pour "to start"
+    --status-in-progress: #ffc342a5;  // Orange pour "in progress"
+    --status-done: #51af4ca7;  // Vert pour "done"
+
 }
 
 [data-theme='dark'] {
@@ -81,7 +86,7 @@ input[type="submit"] {
     background-color: var(--foreground);
     border-radius: 4px;
     padding: 8px 15px;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 600;
     font-family: 'Switzer', sans-serif;
     cursor: pointer;

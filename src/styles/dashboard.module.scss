@@ -1,16 +1,6 @@
 .dashboardpage {
     width: 100%;
-    overflow: scroll;
-
-    &_navbar {
-        display: flex;
-        height: fit-content;
-        width: 100%;
-        justify-content: center;
-        align-items: center;
-        gap: 5px;
-        padding: 15px 15px 0;
-    }
+    overflow: auto;
 
     &_header {
         display: flex;
@@ -26,20 +16,103 @@
             font-size: 5rem;
             font-weight: 600;
         }
-
-        h2 {
-            font-size: 2rem;
-            font-weight: 500;
-        }
     }
 
     &_content {
+        padding: 20px;
         border-radius: 10px;
         width: 100%;
         height: 100%;
-        // margin: 0 20px 20px 20px;
-        padding: 20px;
+    }
+}
 
+.taskTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    text-align: left;
+
+    th {
+        font-size: 0.8rem;
+        opacity: 0.6;
     }
 
+    th, td {
+        padding: 0.5rem;
+        border-bottom: 1px solid var(--background-opacity);
+    }
+
+    tbody tr {
+        cursor: pointer;
+        &:hover {
+            background-color: var(--background-opacity);
+        }
+    }
+    td {
+        color: var(--foreground);
+    }
+
+    td:first-child {
+        font-weight: bold;
+    }
+}
+
+
+
+.badge {
+    display: inline-block;
+    padding: 3px 7px;
+    border-radius: 12px;
+    opacity: 0.9;
+    font-size: 0.8rem;
+    width: fit-content;
+    font-weight: 600;
+}
+
+.toStart {
+    background-color: var(--status-to-start);
+}
+
+.inProgress {
+    background-color: var(--status-in-progress);
+}
+
+.done {
+    background-color: var(--status-done);
+}
+
+
+
+.viewSwitcher {
+    margin-bottom: 20px;
+}
+
+.gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.galleryItem {
+    border: 1px solid var(--background-opacity);
+    border-radius: 10px;
+    padding: 15px;
+    flex: 1 1 calc(33% - 20px);
+    cursor: pointer;
+    transition: background 0.3s;
+
+    &:hover {
+        background: var(--background-opacity);
+    }
+
+    h3 {
+        margin: 0 0 10px;
+        font-size: 1.2rem;
+    }
+
+    span {
+        display: block;
+        margin-bottom: 10px;
+    }
 }
