@@ -128,7 +128,7 @@ const Dashboard = () => {
                                             <th>Task</th>
                                             <th>Status</th>
                                             <th>Deadline</th>
-                                            <th>Actions</th> {/* Ajouter une colonne pour les actions */}
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -151,6 +151,8 @@ const Dashboard = () => {
                                             </tr>
                                         ))}
                                     </tbody>
+
+
                                 </table>
                             ) : (
                                 <div className={styles.gallery}>
