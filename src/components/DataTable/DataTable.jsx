@@ -13,7 +13,7 @@ const DataTable = ({ tasks, onTaskClick, onDeleteTask, getStatusBadgeClass }) =>
     };
 
     const dropdownItems = [
-        { label: 'Delete', action: 'delete' },
+        { label: '🗑️  Delete', action: 'delete' },
         // Ajoutez d'autres éléments de menu ici si nécessaire
     ];
 
@@ -29,41 +29,48 @@ const DataTable = ({ tasks, onTaskClick, onDeleteTask, getStatusBadgeClass }) =>
                 </tr>
             </thead>
             <tbody>
-                {tasks.map((task) => (
-                    <tr key={task.id}>
-                        <td>
-                            <div className={styles.titleContainer}>
-                                <span>{task.title}</span>
-                                <button
-                                    className={`${styles.open} tertiary`}
-                                    onClick={() => onTaskClick(task)}
-                                >
-                                    <OpenIcon/> Open
-                                </button>
-                            </div>
-                        </td>
-                        <td>
-                            <span className={getStatusBadgeClass(task.status)}>
-                                {task.status === 'To start' ? '📅  to start' :
-                                    task.status === 'In progress' ? '🕒  in progress' :
-                                        task.status === 'Done' ? '✅  done' : task.status.toLowerCase()}
-                            </span>
-                        </td>
-                        <td>
-                            {
-                                task.deadline && <span className='small'>
-                                    {formatDate(task.deadline)}</span>
-                            }
+                {tasks.map((task) => {
+                    const { formattedDate, className } = formatDate(task.deadline);
 
-                        </td>
-                        <td>
-                            <Dropdown
-                                items={dropdownItems}
-                                onItemClick={(item) => handleDropdownItemClick(item, task.id)}
-                            />
-                        </td>
-                    </tr>
-                ))}
+                    return (
+                        <tr key={task.id}>
+                            <td>
+                                <div className={styles.titleContainer}>
+                                    <span>{task.title}</span>
+                                    <button
+                                        className={`${styles.open} tertiary`}
+                                        onClick={() => onTaskClick(task)}
+                                    >
+                                        <OpenIcon /> Open
+                                    </button>
+                                </div>
+                            </td>
+                            <td>
+                                <span className={getStatusBadgeClass(task.status)}>
+                                    {task.status === 'To start' ? '📅  to start' :
+                                        task.status === 'In progress' ? '🕒  in progress' :
+                                            task.status === 'Done' ? '✅  done' : task.status.toLowerCase()}
+                                </span>
+                            </td>
+                            <td>
+                                {task.deadline && (
+                                    <span className={`small ${className}`}>
+                                        {formattedDate}  {/* Utilise `formattedDate` pour l'affichage */}
+                                    </span>
+                                )}
+
+
+                            </td>
+                            <td>
+                                <Dropdown
+                                    items={dropdownItems}
+                                    onItemClick={(item) => handleDropdownItemClick(item, task.id)}
+                                />
+                            </td>
+                        </tr>
+                    )
+                }
+                )}
             </tbody>
         </table>
     );

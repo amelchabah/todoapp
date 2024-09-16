@@ -1,23 +1,42 @@
 // src/components/NewTaskModal/NewTaskModal.jsx
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../lib/supabaseClient';
+import { StatusIcon, CalendarIcon, AnglesRightIcon } from '@/assets/icons';
+import { gsap } from 'gsap';
 import styles from './NewTaskModal.module.scss';
-import { BackIcon, StatusIcon, CalendarIcon, EditIcon } from '@/assets/icons';
 
 const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
     const [taskTitle, setTaskTitle] = useState('');
     const [taskStatus, setTaskStatus] = useState('');
     const [taskDeadline, setTaskDeadline] = useState('');
+    const [taskDescription, setTaskDescription] = useState(''); // Ajouter état pour description
     const [error, setError] = useState('');
+    const modalRef = useRef(null);
 
     useEffect(() => {
         if (taskToEdit) {
             setTaskTitle(taskToEdit.title);
             setTaskStatus(taskToEdit.status);
             setTaskDeadline(taskToEdit.deadline || '');
+            setTaskDescription(taskToEdit.description || ''); // Charger la description si elle existe
         }
     }, [taskToEdit]);
+
+    useEffect(() => {
+        // Animation d'ouverture
+        gsap.fromTo(modalRef.current,
+            { opacity: 0, x: '100%' }, // Position initiale hors écran à droite
+            { opacity: 1, x: '0%', duration: 0.3, ease: "power2.out" }
+        );
+    }, []);
+
+    const handleClose = () => {
+        // Animation de fermeture
+        gsap.to(modalRef.current,
+            { opacity: 0, x: '100%', duration: 0.3, ease: "power2.in", onComplete: onClose }
+        );
+    };
 
     const handleSaveTask = async (event) => {
         event.preventDefault();
@@ -35,20 +54,26 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                 // Mise à jour de la tâche
                 const { error } = await supabase
                     .from('tasks')
-                    .update({ title: taskTitle, status: taskStatus, deadline })
+                    .update({
+                        title: taskTitle, status: taskStatus, deadline, description: taskDescription // Inclure la description
+                    })
                     .eq('id', taskToEdit.id);
 
                 if (error) {
                     setError(error.message);
                 } else {
-                    onClose();
+                    handleClose();
                     fetchTasks(userId);
                 }
             } else {
                 // Création de la tâche
                 const { error } = await supabase
                     .from('tasks')
-                    .insert([{ title: taskTitle, status: taskStatus, deadline, user_id: userId }]);
+                    .insert([{
+                        title: taskTitle, status: taskStatus, deadline,
+                        description: taskDescription, // Inclure la description
+                        user_id: userId
+                    }]);
 
                 if (error) {
                     setError(error.message);
@@ -56,7 +81,8 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                     setTaskTitle('');
                     setTaskStatus('To start');
                     setTaskDeadline('');
-                    onClose();
+                    setTaskDescription(''); // Réinitialiser la description
+                    handleClose();
                     fetchTasks(userId);
                 }
             }
@@ -79,9 +105,13 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
     };
 
     return (
-        <div className={styles.modal}>
-            <div className={styles.modalContent}>
-                <button onClick={onClose} className="tertiary tertiary_square"><BackIcon /></button>
+        <div className={styles.modal} onClick={handleClose}>
+            <div
+                className={styles.modalContent}
+                ref={modalRef}
+                onClick={(e) => e.stopPropagation()} // Prevent click on modal content from closing modal
+            >
+                <button onClick={handleClose} className="tertiary tertiary_square"><AnglesRightIcon /></button>
                 <br />
                 <form onSubmit={handleSaveTask}>
                     <input
@@ -94,7 +124,6 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                     />
 
                     <div className={styles.taskProperties}>
-
                         <div className={styles.taskPropertyInput}>
                             <label htmlFor="Status">
                                 <StatusIcon />
@@ -123,9 +152,17 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                                 onChange={(e) => setTaskDeadline(e.target.value)}
                             />
                         </div>
-                    </div>
 
-                    <button type="submit">Save Task</button>
+                    </div>
+                    <textarea
+                        className={styles.taskTextarea}
+                        value={taskDescription}
+                        onChange={(e) => setTaskDescription(e.target.value)}
+                        placeholder='Add a description'
+                    />
+
+
+                    <button type="submit">🪄  Save changes</button>
                 </form>
 
                 {error && <p style={{ color: 'red' }}>{error}</p>}

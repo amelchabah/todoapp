@@ -53,6 +53,11 @@ main {
     margin: 0;
 }
 
+svg {
+    fill: var(--foreground);
+    stroke: var(--foreground);
+}
+
 a {
     color: inherit;
     text-decoration: none;
@@ -248,5 +253,9 @@ span.small {
         height: 0.9rem;
         width: auto;
         fill: var(--foreground);
+    }
+
+    &.old {
+        opacity: 0.3;
     }
 }

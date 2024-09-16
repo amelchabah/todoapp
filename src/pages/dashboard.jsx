@@ -1,5 +1,3 @@
-// src/pages/dashboard.jsx
-
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../lib/supabaseClient';
@@ -9,9 +7,7 @@ import Navbar from '@/components/Navbar/Navbar';
 import NewTaskModal from '@/components/NewTaskModal/NewTaskModal';
 import DataTable from '@/components/DataTable/DataTable';
 import Kanban from '@/components/Kanban/Kanban';
-import { formatDate } from '../utils/dateUtils';
 import { TableIcon, KanbanIcon } from '@/assets/icons';  // Importer les icônes
-
 
 const Dashboard = () => {
     const [tasks, setTasks] = useState([]);
@@ -22,7 +18,12 @@ const Dashboard = () => {
     const router = useRouter();
     const [viewMode, setViewMode] = useState('list'); // 'list' ou 'kanban'
     const [activeDropdown, setActiveDropdown] = useState(null); // Pour gérer un seul dropdown à la fois
+    const [isSmall, setIsSmall] = useState(true);  // État pour gérer la classe small
 
+    const toggleFullWidth = (isFullWidth) => {
+      setIsSmall(!isFullWidth);  // Inverse la classe small selon l'état fullWidth
+    };
+  
     useEffect(() => {
         const storedViewMode = localStorage.getItem('viewMode');
         if (storedViewMode) {
@@ -81,7 +82,6 @@ const Dashboard = () => {
                 .from('tasks')
                 .delete()
                 .eq('id', taskId);
-
             if (error) {
                 setError(error.message);
             } else {
@@ -103,8 +103,8 @@ const Dashboard = () => {
         <>
             <Sidebar fetchTasks={fetchTasks} userId={user?.id} />
             <div className={styles.dashboardpage}>
-                <Navbar />
-                <div className={styles.dashboardpage_content}>
+                <Navbar onToggleFullWidth={toggleFullWidth} isFullWidth={!isSmall} />
+                <div className={`${styles.dashboardpage_content} ${isSmall ? styles.small : ''}`}>
                     {
                         tasks && tasks.length > 0 ? <>
                             <h1>

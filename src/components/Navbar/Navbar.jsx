@@ -1,7 +1,9 @@
+import Dropdown from '@/components/Dropdown/Dropdown';
+import Toggle from '@/components/Toggle/Toggle';
 import { useState, useEffect } from 'react';
 import styles from './Navbar.module.scss';
 
-const Navbar = () => {
+const Navbar = ({ onToggleFullWidth, isFullWidth }) => {
   const [currentTime, setCurrentTime] = useState('');
 
   useEffect(() => {
@@ -12,18 +14,32 @@ const Navbar = () => {
       setCurrentTime(`${hours}:${minutes}`);
     };
 
-    // Mettre à jour l'heure immédiatement
     updateClock();
-
-    // Mettre à jour l'heure toutes les minutes
     const intervalId = setInterval(updateClock, 60000);
-
-    // Nettoyer l'intervalle lors du démontage du composant
     return () => clearInterval(intervalId);
   }, []);
 
   return (
     <nav className={styles.navbar}>
+
+      <Dropdown
+        items={[
+          {
+            title: 'Full Width',
+            label: (
+              <>
+                <span>Full Width</span>
+                <Toggle
+                  isChecked={isFullWidth}
+                />
+              </>
+
+            ),
+          },
+        ]}
+        onItemClick={(item) => onToggleFullWidth(!isFullWidth)}
+      />
+
       <h4>{currentTime}</h4>
     </nav>
   );

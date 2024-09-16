@@ -25,7 +25,7 @@ const Kanban = ({ tasks, onTaskClick, onDeleteTask, getStatusBadgeClass }) => {
     };
 
     const dropdownItems = [
-        { label: 'Delete', action: 'delete' },
+        { label: '🗑️  Delete', action: 'delete' },
         // Ajoutez d'autres éléments de menu ici si nécessaire
     ];
 
@@ -33,6 +33,7 @@ const Kanban = ({ tasks, onTaskClick, onDeleteTask, getStatusBadgeClass }) => {
         <div className={styles.kanban}>
             {columns.map(({ status, label }) => {
                 const taskCount = categorizedTasks[status].length;
+
                 return (
                     <div key={status} className={styles.kanbanColumn}>
                         <div className={styles.kanbanHeader}>
@@ -44,35 +45,41 @@ const Kanban = ({ tasks, onTaskClick, onDeleteTask, getStatusBadgeClass }) => {
                             </span>
                         </div>
 
-                        {categorizedTasks[status].map((task) => (
-                            <div
-                                key={task.id}
-                                className={styles.kanbanItem}
-                            >
-                                <div className={styles.kanbanItemHeader}>
-                                    <h3>{task.title}</h3>
-                                    <button className='tertiary tertiary_square' onClick={() => onTaskClick(task)}>
-                                    <EditIcon/>
-                                    </button>
-                                    <Dropdown
-                                        items={dropdownItems}
-                                        onItemClick={(item) => handleDropdownItemClick(item, task.id)}
-                                    />
+                        {categorizedTasks[status].map((task) => {
+
+                            const { formattedDate, className } = formatDate(task.deadline);
+                            return (
+                                <div
+                                    key={task.id}
+                                    className={styles.kanbanItem}
+                                >
+                                    <div className={styles.kanbanItemHeader}>
+                                        <h3>{task.title}</h3>
+                                        <button className='tertiary tertiary_square' onClick={() => onTaskClick(task)}>
+                                            <EditIcon />
+                                        </button>
+                                        <Dropdown
+                                            items={dropdownItems}
+                                            onItemClick={(item) => handleDropdownItemClick(item, task.id)}
+                                        />
+                                    </div>
+                                    <span className={getStatusBadgeClass(task.status)}>
+                                        {task.status === 'To start' ? '📅  to start' :
+                                            task.status === 'In progress' ? '🕒  in progress' :
+                                                task.status === 'Done' ? '✅  done' : task.status.toLowerCase()}
+                                    </span>
+
+                                    {
+                                        task.deadline && <span className='small'>
+                                            <CalendarIcon />
+                                            {formattedDate}</span>
+
+                                    }
                                 </div>
-                                <span className={getStatusBadgeClass(task.status)}>
-                                    {task.status === 'To start' ? '📅  to start' :
-                                        task.status === 'In progress' ? '🕒  in progress' :
-                                            task.status === 'Done' ? '✅  done' : task.status.toLowerCase()}
-                                </span>
+                            )
+                        }
 
-                                {
-                                    task.deadline && <span className='small'>
-                                        <CalendarIcon/>
-                                        {formatDate(task.deadline)}</span>
-
-                                }
-                            </div>
-                        ))}
+                        )}
                     </div>
                 );
             })}

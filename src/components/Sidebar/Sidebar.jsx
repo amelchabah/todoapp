@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { supabase } from '../../lib/supabaseClient';
 import NewTaskModal from '../NewTaskModal/NewTaskModal';
 import styles from './Sidebar.module.scss';
+import { BackIcon, ListIcon } from '@/assets/icons';
 
 const Sidebar = ({ fetchTasks, userId }) => {
     const [isOpen, setIsOpen] = useState(false);  // On ne définit plus comme ouvert par défaut
@@ -48,9 +49,7 @@ const Sidebar = ({ fetchTasks, userId }) => {
     return (
         <div className={`${styles.sidebar} ${isOpen ? styles.open : styles.closed}`}>
             <button className={`${styles.toggleButton} secondary secondary_square`} onClick={handleToggleSidebar}>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                    <path d="M0 96C0 78.3 14.3 64 32 64h384c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zm0 160c0-17.7 14.3-32 32-32h384c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zm448 160c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32h384c17.7 0 32 14.3 32 32z" />
-                </svg>
+                { isOpen ? <BackIcon/> : <ListIcon/> }
             </button>
             <div className={styles.content}>
                 <div className={styles.buttons}>
