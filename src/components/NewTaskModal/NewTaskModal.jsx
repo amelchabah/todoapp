@@ -8,7 +8,7 @@ import styles from './NewTaskModal.module.scss';
 
 const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
     const [taskTitle, setTaskTitle] = useState('');
-    const [taskStatus, setTaskStatus] = useState('');
+    const [taskStatus, setTaskStatus] = useState('To start');
     const [taskDeadline, setTaskDeadline] = useState('');
     const [taskDescription, setTaskDescription] = useState(''); // Ajouter état pour description
     const [error, setError] = useState('');
@@ -135,9 +135,9 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                                 className={getStatusSelectClass(taskStatus)} // Ajouter la classe en fonction du statut
                                 required
                             >
-                                <option value="To start">📅 To start</option>
-                                <option value="In progress">🕒 In progress</option>
-                                <option value="Done">✅ Done</option>
+                                <option value="To start">📅 to start</option>
+                                <option value="In progress">🕒 in progress</option>
+                                <option value="Done">✅ done</option>
                             </select>
                         </div>
 

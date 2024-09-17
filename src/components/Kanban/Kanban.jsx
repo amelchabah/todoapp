@@ -6,9 +6,11 @@ import { CalendarIcon, EditIcon } from '@/assets/icons';
 
 const Kanban = ({ tasks, onTaskClick, onDeleteTask, getStatusBadgeClass }) => {
     const columns = [
-        { status: 'To start', label: '📅  to start' },
-        { status: 'In progress', label: '🕒  in progress' },
-        { status: 'Done', label: '✅  done' }
+        { status: 'To start', label: '📅 to start' },
+        { status: 'In progress', label: '🕒 in progress' },
+        { status: 'Done', label: '✅ done' }
+        // { status: '', label: '🛌 no status' }
+
     ];
 
     // Catégorisation des tâches par statut
@@ -37,9 +39,9 @@ const Kanban = ({ tasks, onTaskClick, onDeleteTask, getStatusBadgeClass }) => {
                 return (
                     <div key={status} className={styles.kanbanColumn}>
                         <div className={styles.kanbanHeader}>
-                            <h2 className={getStatusBadgeClass(status)}>
+                            <span className={getStatusBadgeClass(status)}>
                                 {label}
-                            </h2>
+                            </span>
                             <span className='small'>
                                 {taskCount}
                             </span>
@@ -54,7 +56,7 @@ const Kanban = ({ tasks, onTaskClick, onDeleteTask, getStatusBadgeClass }) => {
                                     className={styles.kanbanItem}
                                 >
                                     <div className={styles.kanbanItemHeader}>
-                                        <h3>{task.title}</h3>
+                                        <h4>{task.title}</h4>
                                         <button className='tertiary tertiary_square' onClick={() => onTaskClick(task)}>
                                             <EditIcon />
                                         </button>
@@ -64,9 +66,9 @@ const Kanban = ({ tasks, onTaskClick, onDeleteTask, getStatusBadgeClass }) => {
                                         />
                                     </div>
                                     <span className={getStatusBadgeClass(task.status)}>
-                                        {task.status === 'To start' ? '📅  to start' :
-                                            task.status === 'In progress' ? '🕒  in progress' :
-                                                task.status === 'Done' ? '✅  done' : task.status.toLowerCase()}
+                                        {task.status === 'To start' ? '📅 to start' :
+                                            task.status === 'In progress' ? '🕒 in progress' :
+                                                task.status === 'Done' ? '✅ done' : task.status.toLowerCase()}
                                     </span>
 
                                     {

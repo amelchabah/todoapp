@@ -47,9 +47,9 @@ const DataTable = ({ tasks, onTaskClick, onDeleteTask, getStatusBadgeClass }) =>
                             </td>
                             <td>
                                 <span className={getStatusBadgeClass(task.status)}>
-                                    {task.status === 'To start' ? '📅  to start' :
-                                        task.status === 'In progress' ? '🕒  in progress' :
-                                            task.status === 'Done' ? '✅  done' : task.status.toLowerCase()}
+                                    {task.status === 'To start' ? '📅 to start' :
+                                        task.status === 'In progress' ? '🕒 in progress' :
+                                            task.status === 'Done' ? '✅ done' : task.status.toLowerCase()}
                                 </span>
                             </td>
                             <td>
