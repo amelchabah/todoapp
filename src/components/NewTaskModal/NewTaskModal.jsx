@@ -91,6 +91,22 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
         }
     };
 
+    const handleDeleteTask = async () => {
+        if (window.confirm("Are you sure you want to delete this task?")) {
+            const { error } = await supabase
+                .from('tasks')
+                .delete()
+                .eq('id', taskToEdit.id);
+            if (error) {
+                setError(error.message);
+            } else {
+                handleClose();
+                fetchTasks(userId);
+            }
+        }
+    };
+
+
     const getStatusSelectClass = (status) => {
         switch (status) {
             case 'To start':
@@ -163,6 +179,15 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
 
 
                     <button type="submit">🪄  Save changes</button>
+                    {taskToEdit && (
+                        <button
+                            type="button"
+                            className={styles.deleteButton}
+                            onClick={handleDeleteTask}
+                        >
+                            🗑️ Delete Task
+                        </button>
+                    )}
                 </form>
 
                 {error && <p style={{ color: 'red' }}>{error}</p>}
