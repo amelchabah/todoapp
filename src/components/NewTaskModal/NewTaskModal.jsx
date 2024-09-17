@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../lib/supabaseClient';
-import { StatusIcon, CalendarIcon, AnglesRightIcon } from '@/assets/icons';
+import { StatusIcon, CalendarIcon, AnglesRightIcon, TrashIcon } from '@/assets/icons';
 import { gsap } from 'gsap';
 import styles from './NewTaskModal.module.scss';
 
@@ -178,16 +178,21 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                     />
 
 
-                    <button type="submit">🪄  Save changes</button>
-                    {taskToEdit && (
-                        <button
-                            type="button"
-                            className={styles.deleteButton}
-                            onClick={handleDeleteTask}
-                        >
-                            🗑️ Delete Task
-                        </button>
-                    )}
+                    <div
+                        className={styles.actions}>
+                        {taskToEdit && (
+                            <button
+                                type="button"
+                                className='tertiary tertiary_square'
+                                onClick={handleDeleteTask}
+                                title='Delete task'
+                            >
+                                <TrashIcon/>
+                            </button>
+                        )}
+                        <button type="submit">🪄  Save changes</button>
+
+                    </div>
                 </form>
 
                 {error && <p style={{ color: 'red' }}>{error}</p>}
