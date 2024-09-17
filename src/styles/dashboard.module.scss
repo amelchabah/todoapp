@@ -2,6 +2,12 @@
     width: 100%;
     overflow: auto;
 
+    h2 {
+        font-family: "Handjet", sans-serif;
+        opacity: 0.5;
+        font-weight: 400;
+    }
+
     &_header {
         display: flex;
         align-items: center;
@@ -10,12 +16,6 @@
         height: calc(100vh - 30px);
         border-radius: 25px;
         margin: 15px;
-
-        h1 {
-            font-family: "Handjet", sans-serif;
-            font-size: 5rem;
-            font-weight: 600;
-        }
     }
 
     &_content {

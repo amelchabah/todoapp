@@ -8,6 +8,7 @@ import NewTaskModal from '@/components/NewTaskModal/NewTaskModal';
 import DataTable from '@/components/DataTable/DataTable';
 import Kanban from '@/components/Kanban/Kanban';
 import { TableIcon, KanbanIcon } from '@/assets/icons';  // Importer les icônes
+import Head from 'next/head';
 
 const Dashboard = () => {
     const [tasks, setTasks] = useState([]);
@@ -101,10 +102,14 @@ const Dashboard = () => {
 
     return (
         <>
+        <Head>
+            <title>dashboard</title>
+        </Head>
             <Sidebar fetchTasks={fetchTasks} userId={user?.id} />
             <div className={styles.dashboardpage}>
                 <Navbar onToggleFullWidth={toggleFullWidth} isFullWidth={!isSmall} />
                 <div className={`${styles.dashboardpage_content} ${isSmall ? styles.small : ''}`}>
+                    <h2>Hey!</h2>
                     {
                         tasks && tasks.length > 0 ? <>
                             <h1>

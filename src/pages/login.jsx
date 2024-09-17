@@ -34,7 +34,7 @@ const Login = () => {
     return (
         <>
             <Head>
-                <title>Login</title>
+                <title>log in</title>
             </Head>
             <div className={styles.loginpage_header}>
                 <h1>Log in 🥟</h1>

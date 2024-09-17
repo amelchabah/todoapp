@@ -31,7 +31,7 @@ export default function Signup() {
     return (
         <>
             <Head>
-                <title>Sign up</title>
+                <title>sign up</title>
             </Head>
             <div className={styles.signuppage_header}>
                 <h1>Sign up 🥯</h1>
