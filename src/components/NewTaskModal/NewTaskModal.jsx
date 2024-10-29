@@ -1,5 +1,3 @@
-// src/components/NewTaskModal/NewTaskModal.jsx
-
 import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import { StatusIcon, CalendarIcon, AnglesRightIcon, TrashIcon } from '@/assets/icons';
@@ -12,6 +10,7 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
     const [taskDeadline, setTaskDeadline] = useState('');
     const [taskDescription, setTaskDescription] = useState(''); // Ajouter état pour description
     const [error, setError] = useState('');
+    const [formModified, setFormModified] = useState(false);
     const modalRef = useRef(null);
 
     useEffect(() => {
@@ -86,6 +85,8 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                     fetchTasks(userId);
                 }
             }
+            setFormModified(false); // Reset form modified state after save
+
         } catch (err) {
             setError(err.message);
         }
@@ -120,6 +121,12 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
         }
     };
 
+    const handleFieldChange = (setter) => (e) => {
+        setter(e.target.value);
+        setFormModified(true); // Mark form as modified on any field change
+    };
+
+
     return (
         <div className={styles.modal} onClick={handleClose}>
             <div
@@ -127,14 +134,20 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                 ref={modalRef}
                 onClick={(e) => e.stopPropagation()} // Prevent click on modal content from closing modal
             >
-                <button onClick={handleClose} className="tertiary tertiary_square"><AnglesRightIcon /></button>
+                <button onClick={handleClose}
+                className={formModified ? 'tertiary tertiary_square disabled' : 'tertiary tertiary_square'}
+                disabled={formModified} // Disable close button if form is modified
+                title={formModified ? 'Please save changes before closing' : ''}
+
+                ><AnglesRightIcon /></button>
                 <br />
                 <form onSubmit={handleSaveTask}>
                     <input
                         className={styles.taskTitleInput}
                         type="text"
                         value={taskTitle}
-                        onChange={(e) => setTaskTitle(e.target.value)}
+                        onChange={handleFieldChange(setTaskTitle)}
+                        // onChange={(e) => setTaskTitle(e.target.value)}
                         placeholder='Untitled task'
                         required
                     />
@@ -147,7 +160,8 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                             </label>
                             <select
                                 value={taskStatus}
-                                onChange={(e) => setTaskStatus(e.target.value)}
+                                // onChange={(e) => setTaskStatus(e.target.value)}
+                                onChange={handleFieldChange(setTaskStatus)}
                                 className={getStatusSelectClass(taskStatus)} // Ajouter la classe en fonction du statut
                                 required
                             >
@@ -165,7 +179,8 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                             <input
                                 type="date"
                                 value={taskDeadline}
-                                onChange={(e) => setTaskDeadline(e.target.value)}
+                                // onChange={(e) => setTaskDeadline(e.target.value)}
+                                onChange={handleFieldChange(setTaskDeadline)}
                             />
                         </div>
 
@@ -173,7 +188,8 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                     <textarea
                         className={styles.taskTextarea}
                         value={taskDescription}
-                        onChange={(e) => setTaskDescription(e.target.value)}
+                        // onChange={(e) => setTaskDescription(e.target.value)}
+                        onChange={handleFieldChange(setTaskDescription)} // Utiliser la fonction de gestion pour marquer le formulaire comme modifié
                         placeholder='Add a description'
                     />
 

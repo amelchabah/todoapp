@@ -10,6 +10,7 @@ const NewEventModal = ({ onClose, fetchEvents, userId, eventToEdit }) => {
     const [eventStartTime, setEventStartTime] = useState('');
     const [eventEndTime, setEventEndTime] = useState('');
     const [error, setError] = useState('');
+    const [formModified, setFormModified] = useState(false);
     const modalRef = useRef(null);
 
     useEffect(() => {
@@ -30,6 +31,7 @@ const NewEventModal = ({ onClose, fetchEvents, userId, eventToEdit }) => {
     }, []);
 
     const handleClose = () => {
+        // Animation de fermeture
         gsap.to(modalRef.current,
             { opacity: 0, x: '100%', duration: 0.3, ease: "power2.in", onComplete: onClose }
         );
@@ -44,8 +46,8 @@ const NewEventModal = ({ onClose, fetchEvents, userId, eventToEdit }) => {
             return;
         }
 
-        const startTime = eventStartTime || null; // Convert empty string to null
-        const endTime = eventEndTime || null; // Convert empty string to null
+        const startTime = eventStartTime || null;
+        const endTime = eventEndTime || null;
 
         // Validate end time is not before start time
         if (startTime && endTime && new Date(endTime) < new Date(startTime)) {
@@ -55,7 +57,6 @@ const NewEventModal = ({ onClose, fetchEvents, userId, eventToEdit }) => {
 
         try {
             if (eventToEdit) {
-                // Update event
                 const { error } = await supabase
                     .from('events')
                     .update({
@@ -73,7 +74,6 @@ const NewEventModal = ({ onClose, fetchEvents, userId, eventToEdit }) => {
                     fetchEvents(userId);
                 }
             } else {
-                // Create new event
                 const { error } = await supabase
                     .from('events')
                     .insert([{
@@ -94,6 +94,7 @@ const NewEventModal = ({ onClose, fetchEvents, userId, eventToEdit }) => {
                     fetchEvents(userId);
                 }
             }
+            setFormModified(false); // Reset form modified state after save
         } catch (err) {
             setError(err.message);
         }
@@ -115,17 +116,30 @@ const NewEventModal = ({ onClose, fetchEvents, userId, eventToEdit }) => {
         }
     }
 
+    const handleFieldChange = (setter) => (e) => {
+        setter(e.target.value);
+        setFormModified(true); // Mark form as modified on any field change
+    };
+
     return (
         <div className={styles.modal} onClick={handleClose}>
             <div className={styles.modalContent} ref={modalRef} onClick={(e) => e.stopPropagation()} >
-                <button onClick={handleClose} className="tertiary tertiary_square"><AnglesRightIcon /></button>
+                <button 
+                    onClick={handleClose} 
+                    // className="tertiary tertiary_square" 
+                    className={formModified ? 'tertiary tertiary_square disabled' : 'tertiary tertiary_square'}
+                    disabled={formModified} // Disable close button if form is modified
+                    title={formModified ? 'Please save changes before closing' : ''}
+                >
+                    <AnglesRightIcon />
+                </button>
                 <br />
                 <form onSubmit={handleSaveEvent}>
                     <input
                         className={styles.eventTitleInput}
                         type="text"
                         value={eventTitle}
-                        onChange={(e) => setEventTitle(e.target.value)}
+                        onChange={handleFieldChange(setEventTitle)}
                         placeholder='Untitled event'
                         required
                     />
@@ -139,13 +153,11 @@ const NewEventModal = ({ onClose, fetchEvents, userId, eventToEdit }) => {
                                 type="datetime-local"
                                 value={eventStartTime}
                                 onChange={(e) => {
-                                    setEventStartTime(e.target.value);
-                                    // Reset end time if start time is changed
+                                    handleFieldChange(setEventStartTime)(e);
                                     if (eventEndTime && new Date(eventEndTime) < new Date(e.target.value)) {
                                         setEventEndTime('');
                                     }
                                 }}
-                                // required
                             />
                         </div>
 
@@ -157,16 +169,15 @@ const NewEventModal = ({ onClose, fetchEvents, userId, eventToEdit }) => {
                             <input
                                 type="datetime-local"
                                 value={eventEndTime}
-                                onChange={(e) => setEventEndTime(e.target.value)}
+                                onChange={handleFieldChange(setEventEndTime)}
                                 min={eventStartTime} // Disable past dates
-                                // required
                             />
                         </div>
                     </div>
                     <textarea
                         className={styles.eventTextarea}
                         value={eventDescription}
-                        onChange={(e) => setEventDescription(e.target.value)}
+                        onChange={handleFieldChange(setEventDescription)}
                         placeholder='Add a description'
                     />
 
