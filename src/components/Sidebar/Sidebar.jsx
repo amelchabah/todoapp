@@ -16,14 +16,16 @@ const Sidebar = ({ fetchTasks, fetchEvents, userId }) => {
     // Charger l'état de la sidebar depuis le localStorage
     useEffect(() => {
         const savedSidebarState = localStorage.getItem('sidebarState');
+        const isSmallScreen = window.innerWidth < 768;  // Check screen width
+    
         if (savedSidebarState !== null) {
             setIsOpen(savedSidebarState === 'open');
         } else {
-            setIsOpen(true);  // Ouvert par défaut si rien n'est trouvé
+            setIsOpen(!isSmallScreen);  // Default to closed on small screens, open on larger ones
         }
-        setIsInitialized(true); // Initialisation terminée
+        setIsInitialized(true);
     }, []);
-
+    
     const handleToggleSidebar = () => {
         const newState = !isOpen;
         setIsOpen(newState);
