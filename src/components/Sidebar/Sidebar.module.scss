@@ -55,6 +55,10 @@
     @media screen and (max-width: 768px) {
         position: fixed;
 
+        .toggleButton {
+            top: 8px;
+        }
+
         &.open {
             width: 100vw;
 
