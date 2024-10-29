@@ -4,6 +4,8 @@ import { supabase } from '../lib/supabaseClient';
 import styles from '@/styles/dashboard.module.scss';
 import Sidebar from '@/components/Sidebar/Sidebar';
 import Navbar from '@/components/Navbar/Navbar';
+import Events from '@/components/Events/Events';
+import NewEventModal from '@/components/NewEventModal/NewEventModal';
 import NewTaskModal from '@/components/NewTaskModal/NewTaskModal';
 import DataTable from '@/components/DataTable/DataTable';
 import Kanban from '@/components/Kanban/Kanban';
@@ -12,19 +14,22 @@ import Head from 'next/head';
 
 const Dashboard = () => {
     const [tasks, setTasks] = useState([]);
+    const [events, setEvents] = useState([]);
     const [error, setError] = useState('');
     const [user, setUser] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isEventModalOpen, setIsEventModalOpen] = useState(false);
     const [taskToEdit, setTaskToEdit] = useState(null);  // Gérer la tâche à éditer
+    const [eventToEdit, setEventToEdit] = useState(null);
     const router = useRouter();
     const [viewMode, setViewMode] = useState('list'); // 'list' ou 'kanban'
     const [activeDropdown, setActiveDropdown] = useState(null); // Pour gérer un seul dropdown à la fois
     const [isSmall, setIsSmall] = useState(true);  // État pour gérer la classe small
 
     const toggleFullWidth = (isFullWidth) => {
-      setIsSmall(!isFullWidth);  // Inverse la classe small selon l'état fullWidth
+        setIsSmall(!isFullWidth);  // Inverse la classe small selon l'état fullWidth
     };
-  
+
     useEffect(() => {
         const storedViewMode = localStorage.getItem('viewMode');
         if (storedViewMode) {
@@ -36,6 +41,7 @@ const Dashboard = () => {
             if (user) {
                 setUser(user);
                 fetchTasks(user.id);
+                fetchEvents(user.id); // Ajout de l'appel à fetchEvents ici
             } else {
                 router.push('/login');
             }
@@ -59,6 +65,20 @@ const Dashboard = () => {
         }
     };
 
+    const fetchEvents = async (userId) => {
+        const { data, error } = await supabase
+            .from('events')
+            .select('*')
+            .eq('user_id', userId)
+        // .order('start_time', { ascending: true });  // Tri par date de début
+
+        if (error) {
+            setError(error.message);
+        } else {
+            setEvents(data);
+        }
+    };
+
     const getStatusBadgeClass = (status) => {
         switch (status) {
             case 'To start':
@@ -77,6 +97,13 @@ const Dashboard = () => {
         setIsModalOpen(true);
     };
 
+    // Handle event click
+    const handleEventClick = (event) => {
+        setEventToEdit(event);
+        setIsEventModalOpen(true);
+    };
+
+
     const handleDeleteTask = async (taskId) => {
         if (window.confirm("Are you sure you want to delete this task?")) {
             const { error } = await supabase
@@ -87,6 +114,21 @@ const Dashboard = () => {
                 setError(error.message);
             } else {
                 fetchTasks(user.id); // Recharger les tâches après la suppression
+            }
+        }
+    };
+
+    const handleDeleteEvent = async (eventId) => {
+        if (window.confirm("Are you sure you want to delete this event?")) {
+            const { error } = await supabase
+
+                .from('events')
+                .delete()
+                .eq('id', eventId);
+            if (error) {
+                setError(error.message);
+            } else {
+                fetchEvents(user.id); // Recharger les événements après la suppression
             }
         }
     };
@@ -102,14 +144,20 @@ const Dashboard = () => {
 
     return (
         <>
-        <Head>
-            <title>dashboard</title>
-        </Head>
+            <Head>
+                <title>dashboard</title>
+            </Head>
             <Sidebar fetchTasks={fetchTasks} userId={user?.id} />
             <div className={styles.dashboardpage}>
                 <Navbar onToggleFullWidth={toggleFullWidth} isFullWidth={!isSmall} />
-                <div className={`${styles.dashboardpage_content} ${isSmall ? styles.small : ''}`}>
+                <div className={`${styles.dashboardpage_content} ${isSmall ? styles.small : ''} ${isModalOpen ? styles.modalOpen : ''} ${isEventModalOpen ? styles.modalOpen : ''}`}>
+
+
+
+
                     <h2>Hey!</h2>
+
+                  
                     {
                         tasks && tasks.length > 0 ? <>
                             <h1>
@@ -121,6 +169,18 @@ const Dashboard = () => {
 
                     {error && <p>{error}</p>}
                     <br />
+
+                    {
+                        events && events.length > 0 ? <>
+                            <Events
+                                events={events}
+                                onEventClick={handleEventClick}
+                                onDeleteEvent={handleDeleteEvent}
+                            />
+                        </> : <><h1>
+                            No events today. 🛌</h1>
+                        </>
+                    }
 
                     {tasks && tasks.length > 0 ?
                         <>
@@ -137,12 +197,12 @@ const Dashboard = () => {
                                         className={viewMode === 'kanban' ? 'tertiary active' : 'tertiary'}
                                         onClick={() => handleViewModeChange('kanban')}  // Changement de mode avec sauvegarde
                                     >
-                                       <KanbanIcon /> Kanban
+                                        <KanbanIcon /> Kanban
                                     </button>
                                 </div>
 
                                 <div className={styles.options}>
-                                 
+
                                 </div>
                             </div>
 
@@ -175,6 +235,15 @@ const Dashboard = () => {
                     fetchTasks={fetchTasks}
                     userId={user?.id}
                     taskToEdit={taskToEdit}  // Passer la tâche à éditer
+                />
+            )}
+
+            {isEventModalOpen && (
+                <NewEventModal
+                    onClose={() => setIsEventModalOpen(false)}
+                    fetchEvents={fetchEvents}
+                    userId={user?.id}
+                    eventToEdit={eventToEdit}
                 />
             )}
         </>

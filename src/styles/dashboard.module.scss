@@ -34,6 +34,11 @@
             transition: all 0.2s ease-in-out;
             margin: 0 auto;
         }
+
+        &.modalOpen {
+            transition: all 0.2s ease-in-out;
+            margin: 0;
+        }
     }
 }
 

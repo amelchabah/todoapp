@@ -71,7 +71,7 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                     .from('tasks')
                     .insert([{
                         title: taskTitle, status: taskStatus, deadline,
-                        description: taskDescription, // Inclure la description
+                        description: taskDescription,
                         user_id: userId
                     }]);
 

@@ -1,0 +1,57 @@
+.eventsContainer {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+
+    .eventsgroup {
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+
+        .event {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 5px;
+            cursor: pointer;
+
+
+            min-height: calc(.9rem + 25px);
+
+            p:first-child {
+                margin-left: 6px;
+                font-weight: bold;
+                font-size: .9rem;
+            }
+
+            .time {
+                padding: 3px 6px;
+                border-radius: 5px;
+                background-color: var(--background-opacity);
+                font-weight: 500;
+                font-size: 0.9rem;
+            }
+
+            &:hover {
+                border-radius: 5px;
+                background-color: var(--background-opacity);
+
+                .time {
+                    background-color: var(--border-color);
+                }
+            }
+        }
+
+        small {
+            font-weight: bold;
+            opacity: 0.6;
+            margin-bottom: 5px;
+        }
+
+
+    }
+
+
+}
