@@ -63,7 +63,7 @@ const Sidebar = ({ fetchTasks, fetchEvents, userId }) => {
                     <span>🏠</span>Dashboard
                     </button>
                     <button onClick={handleNewTask}><span>📋</span>New task</button>
-                    <button onClick={handleNewEvent}><span>📅</span>New Event</button>
+                    <button onClick={handleNewEvent}><span>📅</span>New event</button>
                     <button className={styles.logoutButton} onClick={handleLogout}>
                        <span>✌🏼</span>Log out
                     </button>
