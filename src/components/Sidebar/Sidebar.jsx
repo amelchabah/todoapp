@@ -60,12 +60,12 @@ const Sidebar = ({ fetchTasks, fetchEvents, userId }) => {
             <div className={styles.content}>
                 <div className={styles.buttons}>
                     <button onClick={() => router.push('/dashboard')}>
-                        🏠  Dashboard
+                    <span>🏠</span>Dashboard
                     </button>
-                    <button onClick={handleNewTask}>📋 New task</button>
-                    <button onClick={handleNewEvent}>📅 New Event</button>
+                    <button onClick={handleNewTask}><span>📋</span>New task</button>
+                    <button onClick={handleNewEvent}><span>📅</span>New Event</button>
                     <button className={styles.logoutButton} onClick={handleLogout}>
-                        ✌🏼  Log out
+                       <span>✌🏼</span>Log out
                     </button>
                 </div>
             </div>
