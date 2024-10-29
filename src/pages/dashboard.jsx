@@ -152,40 +152,48 @@ const Dashboard = () => {
                 <Navbar onToggleFullWidth={toggleFullWidth} isFullWidth={!isSmall} />
                 <div className={`${styles.dashboardpage_content} ${isSmall ? styles.small : ''} ${isModalOpen ? styles.modalOpen : ''} ${isEventModalOpen ? styles.modalOpen : ''}`}>
 
+                    <h1>Hey!</h1>
 
 
+                    {error && <>
+                        <p>{error}</p>
 
-                    <h2>Hey!</h2>
-
-                  
-                    {
-                        tasks && tasks.length > 0 ? <>
-                            <h1>
-                                You have {tasks.length} {tasks.length === 1 ? 'task' : 'tasks'} today 🗒️</h1>
-                        </> : <><h1>
-                            Nothing to do today. 🛌</h1>
-                        </>
-                    }
-
-                    {error && <p>{error}</p>}
+                    </>}
+                    <br />
                     <br />
 
                     {
-                        events && events.length > 0 ? <>
+                        events && events.length > 0 &&
+                        <>
                             <Events
                                 events={events}
                                 onEventClick={handleEventClick}
                                 onDeleteEvent={handleDeleteEvent}
                             />
-                        </> : <><h1>
-                            No events today. 🛌</h1>
                         </>
+                        
+                    }
+
+                    {
+                        tasks && tasks.length > 0 ?
+                            <>
+                                <small className='smalltitle'>
+                                    You have {tasks.length} {tasks.length === 1 ? 'task' : 'tasks'} today 🎧</small>
+                                <br />
+                                <br />
+                            </> :
+                            <>
+                                <small className='smalltitle'>
+                                    Nothing to do today. 🛌
+                                </small>
+                                <br />
+                                <br />
+                            </>
                     }
 
                     {tasks && tasks.length > 0 ?
                         <>
                             <div className={styles.databaseHeader}>
-
                                 <div className={styles.viewSwitcher}>
                                     <button
                                         className={viewMode === 'list' ? 'tertiary active' : 'tertiary'}

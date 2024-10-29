@@ -56,7 +56,7 @@ const Events = ({ events, onEventClick, onDeleteEvent }) => {
         <div className={styles.eventsContainer}>
             {groupedEvents.today.length > 0 && (
                 <div className={styles.eventsgroup}>
-                    <small>Today</small>
+                    <small className='smalltitle'>Today</small>
                     {groupedEvents.today.map(event => (
                         <div key={event.id} className={styles.event} onClick={() => onEventClick(event)}>
                             <p>{event.title}</p>
@@ -68,7 +68,7 @@ const Events = ({ events, onEventClick, onDeleteEvent }) => {
 
             {groupedEvents.upcoming.length > 0 && (
                 <div className={styles.eventsgroup}>
-                    <small>Upcoming Events</small>
+                    <small className='smalltitle'>Upcoming Events</small>
                     {groupedEvents.upcoming.map(event => (
                         <div key={event.id} className={styles.event} onClick={() => onEventClick(event)}>
                             <p>{event.title}</p>
@@ -80,7 +80,7 @@ const Events = ({ events, onEventClick, onDeleteEvent }) => {
 
             {groupedEvents.noDeadline.length > 0 && (
                 <div className={styles.eventsgroup}>
-                    <small>No Deadline 🌴</small>
+                    <small className='smalltitle'>No Deadline 🌴</small>
                     {groupedEvents.noDeadline.map(event => (
                         <div key={event.id} className={styles.event} onClick={() => onEventClick(event)}>
                             <p>{event.title}</p>
