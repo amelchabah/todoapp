@@ -5,6 +5,7 @@ import styles from './Navbar.module.scss';
 
 const Navbar = ({ onToggleFullWidth, isFullWidth }) => {
   const [currentTime, setCurrentTime] = useState('');
+  const [showFullWidthButton, setShowFullWidthButton] = useState(false);
 
   useEffect(() => {
     const updateClock = () => {
@@ -19,27 +20,37 @@ const Navbar = ({ onToggleFullWidth, isFullWidth }) => {
     return () => clearInterval(intervalId);
   }, []);
 
+  useEffect(() => {
+    const checkScreenWidth = () => {
+      setShowFullWidthButton(window.innerWidth > 768);
+    };
+
+    checkScreenWidth();
+    window.addEventListener('resize', checkScreenWidth);
+    
+    return () => window.removeEventListener('resize', checkScreenWidth);
+  }, []);
+
   return (
     <nav className={styles.navbar}>
       <h4>{currentTime}</h4>
 
-      <Dropdown
-        items={[
-          {
-            title: 'Full Width',
-            label: (
-              <>
-                <span>Full width</span>
-                <Toggle
-                  isChecked={isFullWidth}
-                />
-              </>
-
-            ),
-          },
-        ]}
-        onItemClick={(item) => onToggleFullWidth(!isFullWidth)}
-      />
+      {showFullWidthButton && (
+        <Dropdown
+          items={[
+            {
+              title: 'Full Width',
+              label: (
+                <>
+                  <span>Full width</span>
+                  <Toggle isChecked={isFullWidth} />
+                </>
+              ),
+            },
+          ]}
+          onItemClick={() => onToggleFullWidth(!isFullWidth)}
+        />
+      )}
     </nav>
   );
 };
