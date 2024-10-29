@@ -13,15 +13,13 @@ const Sidebar = ({ fetchTasks, fetchEvents, userId }) => {
     const [isEventModalOpen, setIsEventModalOpen] = useState(false);
     const router = useRouter();
 
-    // Charger l'état de la sidebar depuis le localStorage
     useEffect(() => {
-        const savedSidebarState = localStorage.getItem('sidebarState');
-        const isSmallScreen = window.innerWidth < 768;  // Check screen width
-    
-        if (savedSidebarState !== null) {
-            setIsOpen(savedSidebarState === 'open');
+        const isSmallScreen = window.innerWidth < 768; // Check screen width
+        if (isSmallScreen) {
+            setIsOpen(false); // Default closed on mobile
         } else {
-            setIsOpen(!isSmallScreen);  // Default to closed on small screens, open on larger ones
+            const savedSidebarState = localStorage.getItem('sidebarState');
+            setIsOpen(savedSidebarState === 'open');
         }
         setIsInitialized(true);
     }, []);
@@ -33,6 +31,13 @@ const Sidebar = ({ fetchTasks, fetchEvents, userId }) => {
         // Sauvegarder l'état de la sidebar dans le localStorage
         localStorage.setItem('sidebarState', newState ? 'open' : 'closed');
     };
+
+    const handleButtonClick = () => {
+        if (window.innerWidth < 768) {
+            setIsOpen(false); // Ferme la sidebar automatiquement sur mobile
+        }
+    };
+
 
     const handleLogout = async () => {
         const { error } = await supabase.auth.signOut();
@@ -57,17 +62,34 @@ const Sidebar = ({ fetchTasks, fetchEvents, userId }) => {
     return (
         <div className={`${styles.sidebar} ${isOpen ? styles.open : styles.closed}`}>
             <button className={`${styles.toggleButton} secondary secondary_square`} onClick={handleToggleSidebar}>
-                { isOpen ? <BackIcon/> : <ListIcon/> }
+                {isOpen ? <BackIcon /> : <ListIcon />}
             </button>
             <div className={styles.content}>
                 <div className={styles.buttons}>
-                    <button onClick={() => router.push('/dashboard')}>
-                    <span>🏠</span>Dashboard
+                    <button onClick={
+                        () => {
+                            router.push('/dashboard');
+                            handleButtonClick();
+
+                        }}>
+                        <span>🏠</span>Dashboard
                     </button>
-                    <button onClick={handleNewTask}><span>📋</span>New task</button>
-                    <button onClick={handleNewEvent}><span>📅</span>New event</button>
+                    <button onClick={
+                        () => {
+                            handleNewTask();
+                            handleButtonClick();
+                        }
+                    }>
+                        <span>📋</span>New task</button>
+                    <button onClick={
+                        () => {
+                            handleNewEvent();
+                            handleButtonClick();
+                        }
+                    }>
+                        <span>📅</span>New event</button>
                     <button className={styles.logoutButton} onClick={handleLogout}>
-                       <span>✌🏼</span>Log out
+                        <span>✌🏼</span>Log out
                     </button>
                 </div>
             </div>
