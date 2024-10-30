@@ -55,8 +55,8 @@ const Kanban = ({ tasks, onTaskClick, onDeleteTask, getStatusBadgeClass }) => {
                                     key={task.id}
                                     className={styles.kanbanItem}
                                 >
-                                    <div className={styles.kanbanItemHeader}>
-                                        <h4>{task.title}</h4>
+                                    <div className={styles.kanbanItemActions}>
+
                                         <button className='tertiary tertiary_square' onClick={() => onTaskClick(task)}>
                                             <EditIcon />
                                         </button>
@@ -65,8 +65,13 @@ const Kanban = ({ tasks, onTaskClick, onDeleteTask, getStatusBadgeClass }) => {
                                             onItemClick={(item) => handleDropdownItemClick(item, task.id)}
                                         />
                                     </div>
+
+                                    <div className={styles.kanbanItemHeader}>
+                                        <p><span>{task.icon}</span>{task.title}</p>
+
+                                    </div>
                                     <span className={getStatusBadgeClass(task.status)}>
-                                    
+
                                         {task.status === 'To start' ? <><span>📅</span><span>to start</span></> :
                                             task.status === 'In progress' ? <><span>🕒</span><span>in progress</span></> :
                                                 task.status === 'Done' ? <><span>✅</span><span>done</span></> : task.status.toLowerCase()}

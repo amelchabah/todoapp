@@ -3,35 +3,41 @@ import { supabase } from '../../lib/supabaseClient';
 import { StatusIcon, CalendarIcon, AnglesRightIcon, TrashIcon } from '@/assets/icons';
 import { gsap } from 'gsap';
 import styles from './NewTaskModal.module.scss';
+import EmojiPicker from 'emoji-picker-react';
+import { Theme } from 'emoji-picker-react';
+import { useTheme } from '@/context/ThemeContext';
 
 const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
+    const { isDarkMode } = useTheme();
     const [taskTitle, setTaskTitle] = useState('');
     const [taskStatus, setTaskStatus] = useState('To start');
     const [taskDeadline, setTaskDeadline] = useState('');
-    const [taskDescription, setTaskDescription] = useState(''); // Ajouter état pour description
+    const [taskDescription, setTaskDescription] = useState('');
     const [error, setError] = useState('');
     const [formModified, setFormModified] = useState(false);
     const modalRef = useRef(null);
+    const [icon, setIcon] = useState('');
+    const [isPickerOpen, setIsPickerOpen] = useState(false);
+    const emojiPickerRef = useRef(null);
 
     useEffect(() => {
         if (taskToEdit) {
             setTaskTitle(taskToEdit.title);
             setTaskStatus(taskToEdit.status);
             setTaskDeadline(taskToEdit.deadline || '');
-            setTaskDescription(taskToEdit.description || ''); // Charger la description si elle existe
+            setTaskDescription(taskToEdit.description || '');
+            setIcon(taskToEdit.icon || '');
         }
     }, [taskToEdit]);
 
     useEffect(() => {
-        // Animation d'ouverture
         gsap.fromTo(modalRef.current,
-            { opacity: 0, x: '100%' }, // Position initiale hors écran à droite
+            { opacity: 0, x: '100%' },
             { opacity: 1, x: '0%', duration: 0.3, ease: "power2.out" }
         );
     }, []);
 
     const handleClose = () => {
-        // Animation de fermeture
         gsap.to(modalRef.current,
             { opacity: 0, x: '100%', duration: 0.3, ease: "power2.in", onComplete: onClose }
         );
@@ -47,14 +53,13 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
         }
 
         try {
-            const deadline = taskDeadline || null; // Convert empty string to null
+            const deadline = taskDeadline || null;
 
             if (taskToEdit) {
-                // Mise à jour de la tâche
                 const { error } = await supabase
                     .from('tasks')
                     .update({
-                        title: taskTitle, status: taskStatus, deadline, description: taskDescription // Inclure la description
+                        title: taskTitle, status: taskStatus, deadline, description: taskDescription, icon
                     })
                     .eq('id', taskToEdit.id);
 
@@ -65,12 +70,11 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                     fetchTasks(userId);
                 }
             } else {
-                // Création de la tâche
                 const { error } = await supabase
                     .from('tasks')
                     .insert([{
                         title: taskTitle, status: taskStatus, deadline,
-                        description: taskDescription,
+                        description: taskDescription, icon,
                         user_id: userId
                     }]);
 
@@ -80,12 +84,13 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                     setTaskTitle('');
                     setTaskStatus('To start');
                     setTaskDeadline('');
-                    setTaskDescription(''); // Réinitialiser la description
+                    setTaskDescription('');
+                    setIcon('');
                     handleClose();
                     fetchTasks(userId);
                 }
             }
-            setFormModified(false); // Reset form modified state after save
+            setFormModified(false);
 
         } catch (err) {
             setError(err.message);
@@ -107,6 +112,21 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
         }
     };
 
+    const handleOutsideClick = (event) => {
+        // setpickeropen to false if click is outside emoji picker
+        if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target)) {
+            setIsPickerOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        if (isPickerOpen) {
+            document.addEventListener('click', handleOutsideClick);
+        } else {
+            document.removeEventListener('click', handleOutsideClick);
+        }
+        return () => document.removeEventListener('click', handleOutsideClick);
+    }, [isPickerOpen]);
 
     const getStatusSelectClass = (status) => {
         switch (status) {
@@ -123,31 +143,51 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
 
     const handleFieldChange = (setter) => (e) => {
         setter(e.target.value);
-        setFormModified(true); // Mark form as modified on any field change
+        setFormModified(true);
     };
 
-
     return (
-        <div className={styles.modal} onClick={handleClose}>
+        <div className={styles.modal}>
             <div
+            onClick={handleOutsideClick}
                 className={styles.modalContent}
                 ref={modalRef}
-                onClick={(e) => e.stopPropagation()} // Prevent click on modal content from closing modal
+                // onClick={(e) => e.stopPropagation()} // Prevent click on modal content from closing modal
             >
                 <button onClick={handleClose}
-                className={formModified ? 'tertiary tertiary_square disabled' : 'tertiary tertiary_square'}
-                disabled={formModified} // Disable close button if form is modified
-                title={formModified ? 'Please save changes before closing' : ''}
-
+                    className={formModified ? 'tertiary tertiary_square disabled' : 'tertiary tertiary_square'}
+                    disabled={formModified}
+                    title={formModified ? 'Please save changes before closing' : ''}
                 ><AnglesRightIcon /></button>
                 <br />
                 <form onSubmit={handleSaveTask}>
+                    <div className={styles.iconPicker}>
+                        <label htmlFor="Icon" hidden>Icon</label>
+                        <div className={styles.taskIcon} onClick={(e) => {
+                            e.stopPropagation(); // Prevent modal close on icon click
+                            setIsPickerOpen(!isPickerOpen);
+                        }}>
+                            {icon ? <span>{icon}</span> : <button type="button" className='tertiary'>Add icon</button>}
+                        </div>
+                        {isPickerOpen && (
+                            <div ref={emojiPickerRef} className={`${styles.emojiPicker} emojiPicker`}>
+                                <EmojiPicker
+                                    onEmojiClick={(emojiObject) => {
+                                        setIcon(emojiObject.emoji);
+                                        setIsPickerOpen(false);
+                                        handleFieldChange(setIcon)({ target: { value: emojiObject.emoji } });
+                                    }}
+                                    theme={isDarkMode ? Theme.DARK : Theme.LIGHT}
+                                />
+                            </div>
+                        )}
+                    </div>
+
                     <input
                         className={styles.taskTitleInput}
                         type="text"
                         value={taskTitle}
                         onChange={handleFieldChange(setTaskTitle)}
-                        // onChange={(e) => setTaskTitle(e.target.value)}
                         placeholder='Untitled task'
                         required
                     />
@@ -160,9 +200,8 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                             </label>
                             <select
                                 value={taskStatus}
-                                // onChange={(e) => setTaskStatus(e.target.value)}
                                 onChange={handleFieldChange(setTaskStatus)}
-                                className={getStatusSelectClass(taskStatus)} // Ajouter la classe en fonction du statut
+                                className={getStatusSelectClass(taskStatus)}
                                 required
                             >
                                 <option value="To start">📅 to start</option>
@@ -179,23 +218,19 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                             <input
                                 type="date"
                                 value={taskDeadline}
-                                // onChange={(e) => setTaskDeadline(e.target.value)}
                                 onChange={handleFieldChange(setTaskDeadline)}
                             />
                         </div>
-
                     </div>
+
                     <textarea
                         className={styles.taskTextarea}
                         value={taskDescription}
-                        // onChange={(e) => setTaskDescription(e.target.value)}
-                        onChange={handleFieldChange(setTaskDescription)} // Utiliser la fonction de gestion pour marquer le formulaire comme modifié
+                        onChange={handleFieldChange(setTaskDescription)}
                         placeholder='Add a description'
                     />
 
-
-                    <div
-                        className={styles.actions}>
+                    <div className={styles.actions}>
                         {taskToEdit && (
                             <button
                                 type="button"
@@ -203,11 +238,10 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                                 onClick={handleDeleteTask}
                                 title='Delete task'
                             >
-                                <TrashIcon/>
+                                <TrashIcon />
                             </button>
                         )}
                         <button type="submit">🪄  Save changes</button>
-
                     </div>
                 </form>
 

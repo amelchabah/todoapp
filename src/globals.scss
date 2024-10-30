@@ -15,7 +15,6 @@
     --status-to-start: #861010;
     --status-in-progress: #825f14;
     --status-done: #12650d;
-
 }
 
 [data-theme='dark'] {
@@ -156,8 +155,6 @@ input[type="submit"] {
         }
     }
 
-
-
     &.tertiary {
         border: none;
         border-radius: 5px;
@@ -205,6 +202,10 @@ input[type="submit"] {
             text-decoration: underline;
         }
     }
+}
+
+.emojiPicker button {
+    padding: 0;
 }
 
 input,

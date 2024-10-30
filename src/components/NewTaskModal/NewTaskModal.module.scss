@@ -39,6 +39,44 @@
     form {
         padding: 5px 30px;
 
+        .iconPicker {
+            position: relative;
+
+            .taskIcon {
+
+                span {
+                    font-size: 3rem;
+                    cursor: pointer;
+                    padding: 2px 8px;
+                    border-radius: 5px;
+
+                    &:hover {
+                        background-color: var(--background-opacity);
+                    }
+                }
+
+                button {
+                    font-size: 0.9rem;
+                    font-weight: 600;
+                    background-color: none;
+
+                    &:hover {
+                        background-color: var(--background-opacity);
+                    }
+                }
+            }
+
+
+            .emojiPicker {
+                position: absolute;
+                z-index: 100;
+                top: 40px;
+                left: 0;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+        }
+
         .actions {
             position: absolute;
             top: 10px;
@@ -108,12 +146,12 @@
             background-color: var(--status-to-start-bg);
             color: var(--status-to-start);
         }
-        
+
         &.inProgress {
             background-color: var(--status-in-progress-bg);
             color: var(--status-in-progress);
         }
-        
+
         &.done {
             background-color: var(--status-done-bg);
             color: var(--status-done);
@@ -124,7 +162,7 @@
 .taskTextarea {
     resize: none;
     height: 100%;
-    min-height:500px;
+    min-height: 500px;
     border: none;
     padding: 5px 0;
     outline: none;

@@ -36,7 +36,7 @@ const DataTable = ({ tasks, onTaskClick, onDeleteTask, getStatusBadgeClass }) =>
                         <tr key={task.id}>
                             <td>
                                 <div className={styles.titleContainer}>
-                                    <span>{task.title}</span>
+                                   <span>{task.icon}</span> <span>{task.title}</span>
                                     <button
                                         className={`${styles.open} tertiary`}
                                         onClick={() => onTaskClick(task)}

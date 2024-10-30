@@ -29,31 +29,47 @@
         gap: 10px;
         flex-direction: column;
 
+        &Actions {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            z-index: 5;
+            opacity: 0;
+            background: var(--background-opacity);
+            border:1px solid var(--border-color);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        &:hover {
+            .kanbanItemActions {
+                opacity: 1;
+            }
+
+        }
+
         &Header {
             display: flex;
             justify-content: space-between;
             position: relative;
             gap: 2px;
 
-            button {
-                opacity: 0;
-            }
 
-            h4 {
+            p {
+                display: flex;
+                gap: 10px;
                 margin-right: auto;
                 text-overflow: ellipsis;
                 overflow-wrap: break-word;
+                font-weight: bold;
+                font-size: 0.9rem;
             }
 
         }
 
-        &:hover {
-
-            button {
-                opacity: 0.6;
-            }
-
-        }
+       
     }
 
 

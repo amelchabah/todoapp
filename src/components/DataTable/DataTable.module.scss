@@ -69,8 +69,13 @@
     .titleContainer {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        // justify-content: space-between;
         position: relative;
+        gap: 10px;
+
+        button {
+            margin-left: auto;
+        }
     }
 
 }
