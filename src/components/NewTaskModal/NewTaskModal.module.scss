@@ -73,6 +73,16 @@
                 top: 40px;
                 left: 0;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+
+                .removeEmojiButton {
+                    padding: 10px;
+                    position: absolute;
+                    bottom: 15px;
+                    right: 15px;
+                    cursor: pointer;
+                    z-index: 6;
+                }
             }
 
         }
