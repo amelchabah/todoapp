@@ -177,7 +177,12 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                                     }}
                                     theme={isDarkMode ? Theme.DARK : Theme.LIGHT}
                                 />
-                                <button type="button" title='Remove icon' className={`${styles.removeEmojiButton} tertiary tertiary_square`} onClick={() => setIcon('')}>
+                                <button type="button" title='Remove icon' className={`${styles.removeEmojiButton} tertiary tertiary_square`} 
+                                
+                                onClick={() => setIcon('')}
+                                // onClick={handleFieldChange(setIcon)({ target: { value: '' } })}
+                                    
+                                    >
                                     <TrashIcon />
                                 </button>
                             </div>
