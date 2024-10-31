@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import { StatusIcon, CalendarIcon, AnglesRightIcon, TrashIcon } from '@/assets/icons';
 import { gsap } from 'gsap';
-import styles from './NewEventModal.module.scss';
+// import styles from './NewEventModal.module.scss';
+
+import styles from '../../styles/modal.module.scss';
 
 const NewEventModal = ({ onClose, fetchEvents, userId, eventToEdit }) => {
     const [eventTitle, setEventTitle] = useState('');
@@ -23,15 +25,13 @@ const NewEventModal = ({ onClose, fetchEvents, userId, eventToEdit }) => {
     }, [eventToEdit]);
 
     useEffect(() => {
-        // Animation d'ouverture
         gsap.fromTo(modalRef.current,
-            { opacity: 0, x: '100%' }, // Position initiale hors écran à droite
+            { opacity: 0, x: '100%' },
             { opacity: 1, x: '0%', duration: 0.3, ease: "power2.out" }
         );
     }, []);
 
     const handleClose = () => {
-        // Animation de fermeture
         gsap.to(modalRef.current,
             { opacity: 0, x: '100%', duration: 0.3, ease: "power2.in", onComplete: onClose }
         );
@@ -94,7 +94,7 @@ const NewEventModal = ({ onClose, fetchEvents, userId, eventToEdit }) => {
                     fetchEvents(userId);
                 }
             }
-            setFormModified(false); // Reset form modified state after save
+            setFormModified(false);
         } catch (err) {
             setError(err.message);
         }
@@ -118,17 +118,16 @@ const NewEventModal = ({ onClose, fetchEvents, userId, eventToEdit }) => {
 
     const handleFieldChange = (setter) => (e) => {
         setter(e.target.value);
-        setFormModified(true); // Mark form as modified on any field change
+        setFormModified(true);
     };
 
     return (
         <div className={styles.modal} onClick={handleClose}>
             <div className={styles.modalContent} ref={modalRef} onClick={(e) => e.stopPropagation()} >
-                <button 
-                    onClick={handleClose} 
-                    // className="tertiary tertiary_square" 
+                <button
+                    onClick={handleClose}
                     className={formModified ? 'tertiary tertiary_square disabled' : 'tertiary tertiary_square'}
-                    disabled={formModified} // Disable close button if form is modified
+                    disabled={formModified} 
                     title={formModified ? 'Please save changes before closing' : ''}
                 >
                     <AnglesRightIcon />
@@ -136,20 +135,21 @@ const NewEventModal = ({ onClose, fetchEvents, userId, eventToEdit }) => {
                 <br />
                 <form onSubmit={handleSaveEvent}>
                     <input
-                        className={styles.eventTitleInput}
+                        className={styles.objectTitleInput}
                         type="text"
                         value={eventTitle}
                         onChange={handleFieldChange(setEventTitle)}
                         placeholder='Untitled event'
                         required
                     />
-                    <div className={styles.taskProperties}>
-                        <div className={styles.eventPropertyInput}>
+                    <div className={styles.objectProperties}>
+                        <div className={styles.objectPropertyInput}>
                             <label htmlFor='Start time'>
                                 <CalendarIcon />
                                 Start time
                             </label>
                             <input
+                                id='Start time'
                                 type="datetime-local"
                                 value={eventStartTime}
                                 onChange={(e) => {
@@ -161,21 +161,22 @@ const NewEventModal = ({ onClose, fetchEvents, userId, eventToEdit }) => {
                             />
                         </div>
 
-                        <div className={styles.eventPropertyInput}>
+                        <div className={styles.objectPropertyInput}>
                             <label htmlFor='Deadline'>
                                 <CalendarIcon />
                                 End time
                             </label>
                             <input
+                                id='Deadline'
                                 type="datetime-local"
                                 value={eventEndTime}
                                 onChange={handleFieldChange(setEventEndTime)}
-                                min={eventStartTime} // Disable past dates
+                                min={eventStartTime}
                             />
                         </div>
                     </div>
                     <textarea
-                        className={styles.eventTextarea}
+                        className={styles.objectTextarea}
                         value={eventDescription}
                         onChange={handleFieldChange(setEventDescription)}
                         placeholder='Add a description'

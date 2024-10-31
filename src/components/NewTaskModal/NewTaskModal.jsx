@@ -2,7 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import { StatusIcon, CalendarIcon, AnglesRightIcon, TrashIcon } from '@/assets/icons';
 import { gsap } from 'gsap';
-import styles from './NewTaskModal.module.scss';
+// import styles from './NewTaskModal.module.scss';
+import styles from '../../styles/modal.module.scss';
+
 import EmojiPicker from 'emoji-picker-react';
 import { Theme } from 'emoji-picker-react';
 import { useTheme } from '@/context/ThemeContext';
@@ -54,7 +56,6 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
 
         try {
             const deadline = taskDeadline || null;
-
             if (taskToEdit) {
                 const { error } = await supabase
                     .from('tasks')
@@ -91,7 +92,6 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                 }
             }
             setFormModified(false);
-
         } catch (err) {
             setError(err.message);
         }
@@ -113,7 +113,6 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
     };
 
     const handleOutsideClick = (event) => {
-        // setpickeropen to false if click is outside emoji picker
         if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target)) {
             setIsPickerOpen(false);
         }
@@ -149,10 +148,9 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
     return (
         <div className={styles.modal}>
             <div
-            onClick={handleOutsideClick}
+                onClick={handleOutsideClick}
                 className={styles.modalContent}
                 ref={modalRef}
-                // onClick={(e) => e.stopPropagation()} // Prevent click on modal content from closing modal
             >
                 <button onClick={handleClose}
                     className={formModified ? 'tertiary tertiary_square disabled' : 'tertiary tertiary_square'}
@@ -162,9 +160,8 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                 <br />
                 <form onSubmit={handleSaveTask}>
                     <div className={styles.iconPicker}>
-                        <label htmlFor="Icon" hidden>Icon</label>
-                        <div className={styles.taskIcon} onClick={(e) => {
-                            e.stopPropagation(); // Prevent modal close on icon click
+                        <div className={styles.objectIcon} onClick={(e) => {
+                            e.stopPropagation();
                             setIsPickerOpen(!isPickerOpen);
                         }}>
                             {icon ? <span>{icon}</span> : <button type="button" className='tertiary'>Add icon</button>}
@@ -172,6 +169,7 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                         {isPickerOpen && (
                             <div ref={emojiPickerRef} className={`${styles.emojiPicker} emojiPicker`}>
                                 <EmojiPicker
+
                                     onEmojiClick={(emojiObject) => {
                                         setIcon(emojiObject.emoji);
                                         setIsPickerOpen(false);
@@ -179,7 +177,6 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                                     }}
                                     theme={isDarkMode ? Theme.DARK : Theme.LIGHT}
                                 />
-                                {/* remove emoji button */}
                                 <button type="button" title='Remove icon' className={`${styles.removeEmojiButton} tertiary tertiary_square`} onClick={() => setIcon('')}>
                                     <TrashIcon />
                                 </button>
@@ -188,7 +185,8 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                     </div>
 
                     <input
-                        className={styles.taskTitleInput}
+
+                        className={styles.objectTitleInput}
                         type="text"
                         value={taskTitle}
                         onChange={handleFieldChange(setTaskTitle)}
@@ -196,13 +194,14 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                         required
                     />
 
-                    <div className={styles.taskProperties}>
-                        <div className={styles.taskPropertyInput}>
+                    <div className={styles.objectProperties}>
+                        <div className={styles.objectPropertyInput}>
                             <label htmlFor="Status">
                                 <StatusIcon />
                                 Status
                             </label>
                             <select
+                                id="Status"
                                 value={taskStatus}
                                 onChange={handleFieldChange(setTaskStatus)}
                                 className={getStatusSelectClass(taskStatus)}
@@ -214,12 +213,13 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                             </select>
                         </div>
 
-                        <div className={styles.taskPropertyInput}>
+                        <div className={styles.objectPropertyInput}>
                             <label htmlFor='Deadline'>
                                 <CalendarIcon />
                                 Deadline
                             </label>
                             <input
+                                id='Deadline'
                                 type="date"
                                 value={taskDeadline}
                                 onChange={handleFieldChange(setTaskDeadline)}
@@ -228,7 +228,7 @@ const NewTaskModal = ({ onClose, fetchTasks, userId, taskToEdit }) => {
                     </div>
 
                     <textarea
-                        className={styles.taskTextarea}
+                        className={styles.objectTextarea}
                         value={taskDescription}
                         onChange={handleFieldChange(setTaskDescription)}
                         placeholder='Add a description'

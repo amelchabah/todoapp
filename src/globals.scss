@@ -71,6 +71,10 @@ form {
     flex-direction: column;
     gap: 15px;
     min-width: 300px;
+
+    button, input[type="submit"] {
+        padding: 10px !important;
+    }
 }
 
 .form_message {
@@ -124,6 +128,7 @@ input[type="submit"] {
 
     &.primary {
         justify-content: center;
+        padding: 5px 10px;
     }
 
 
